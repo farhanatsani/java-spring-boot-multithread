@@ -1,4 +1,4 @@
-package com.example.thread.car;
+package com.example.thread.car.vo;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @ToString
-public class CarDTO {
+public class CarVO {
     private String carBrand;
     private String carType;
     private String year;

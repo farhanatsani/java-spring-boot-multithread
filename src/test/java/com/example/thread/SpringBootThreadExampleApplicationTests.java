@@ -1,66 +1,63 @@
 package com.example.thread;
 
-import com.example.thread.car.EnrichCarCallable;
-import com.example.thread.car.CarDTO;
-import com.example.thread.car.CarService;
+import com.example.thread.car.service.CarEnrichmentService;
+import com.example.thread.car.service.CarReadCsvService;
+import com.example.thread.car.util.ScrappingUtils;
+import com.example.thread.car.vo.CarVO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
 
 @SpringBootTest
 class SpringBootThreadExampleApplicationTests {
-
 	@Autowired
-	private CarService carService;
-
+	@Qualifier(value = "carReadCsvService")
+	private CarReadCsvService carReadCsvService;
+	@Autowired
+	@Qualifier(value = "carEnrichmentService")
+	private CarEnrichmentService carEnrichmentService;
 	@Test
-	void contextLoads() {
-		List<CarDTO> carList = carService.readCsvDummyCarData("car_result.csv");
-		for(CarDTO carDTO: carList) {
-			System.out.println(carDTO.toString());
+	void testReadCsv() {
+		List<CarVO> carList = carReadCsvService.readCsvCar("car_result.csv");
+		for(CarVO carVO : carList) {
+			System.out.println(carVO.toString());
 		}
 	}
-
-//	@Test
-	void testJsoup() {
-		List<CarDTO> carList = carService.readCsvDummyCarData("car_result.csv");
-		for(CarDTO carDTO: carList) {
-			String carWikiSearchKeyword = carDTO.getCarBrand() + "_" + carDTO.getCarType();
-			String content = carService.readWikiContentPage(carWikiSearchKeyword);
+	@Test
+	void testReadCsvUsingBuffer() {
+		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		for(CarVO carVO : carList) {
+			System.out.println(carVO.toString());
+		}
+	}
+	@Test
+	void testWebScrapping() {
+		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		for(CarVO carVO : carList) {
+			String carWikiSearchKeyword = carVO.getCarBrand() + "_" + carVO.getCarType();
+			String content = ScrappingUtils.readWikiContentPage(carWikiSearchKeyword);
 			System.out.println(carWikiSearchKeyword);
 			System.out.println(content);
 		}
 	}
-
 	@Test
 	void testEnrichDescription() {
-		List<CarDTO> carList = carService.readCsvDummyCarData("car_result.csv");
-		carService.enrichCarDescription(carList);
+		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		carEnrichmentService.enrichCarDescription(carList);
 		for(int i = 0; i < 5; i++) {
 			System.out.println(carList.get(i).toString());
 		}
 	}
-
-	@Test
-	void testReadCsvUsingChunks() {
-		List<CarDTO> carList = carService.readCsvUsingBuffer("car_result.csv");
-		for(CarDTO carDTO: carList) {
-			System.out.println(carDTO.toString());
-		}
-	}
-
 	@Test
 	void testEnrichDescriptionUsingFuture() throws ExecutionException, InterruptedException {
-		List<CarDTO> carList = carService.readCsvUsingBuffer("car_result.csv");
-		carService.enrichCarDescriptionWithExecutor(carList);
+		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		carEnrichmentService.enrichCarDescriptionWithExecutor(carList);
 		for(int i = 0; i < 5; i++) {
 			System.out.println(carList.get(i).toString());
 		}
 	}
-
-
 }
