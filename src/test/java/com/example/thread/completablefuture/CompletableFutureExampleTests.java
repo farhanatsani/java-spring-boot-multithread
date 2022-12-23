@@ -1,6 +1,5 @@
 package com.example.thread.completablefuture;
 
-import com.example.thread.callable.MyCallableFuture;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,18 +21,7 @@ public class CompletableFutureExampleTests {
     void testCompletableFutureRunAsync() {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        for(int i = 0; i <= 10; i++) {
-            int finalI = i;
-            CompletableFuture.runAsync(() -> {
-                try {
-                    String name = "test-" + finalI;
-                    String r = new MyCallableFuture(name).call();
-                    System.out.println(r);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }, executor);
-        }
+
 
     }
 
@@ -41,26 +29,7 @@ public class CompletableFutureExampleTests {
     void testCompletableFuture() throws ExecutionException, InterruptedException {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        List<CompletableFuture<String>> results = new ArrayList<>();
-        for(int i = 0; i <= 10; i++) {
-            int finalI = i;
-            CompletableFuture<String> cfAsync = CompletableFuture.supplyAsync(() -> {
-                String name = "test-" + finalI;
-                String resultCall;
-                try {
-                    resultCall = new MyCallableFuture(name).call();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                return resultCall;
-            }, executor);
-            results.add(cfAsync);
-        }
 
-        for(CompletableFuture cf: results) {
-            String result = (String) cf.get();
-            System.out.println(result);
-        }
 
     }
 

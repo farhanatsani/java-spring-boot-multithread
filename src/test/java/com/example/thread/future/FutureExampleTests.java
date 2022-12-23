@@ -1,8 +1,5 @@
 package com.example.thread.future;
 
-import com.example.thread.callable.MyCallable;
-import com.example.thread.callable.MyCallableFuture;
-import com.example.thread.problem.CounterAtomic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -45,19 +42,7 @@ public class FutureExampleTests {
     void futureInvokeAll() throws InterruptedException, ExecutionException {
         ExecutorService executor = Executors.newSingleThreadExecutor();
 
-        List<MyCallableFuture> myCallables = List.of(
-                new MyCallableFuture("callable1"),
-                new MyCallableFuture("callable2"),
-                new MyCallableFuture("callable3"),
-                new MyCallableFuture("callable4"),
-                new MyCallableFuture("callable5")
-        );
 
-        List<Future<String>> futures = executor.invokeAll(myCallables);
-        for(Future<String> future: futures) {
-            String result = future.get();
-            System.out.println(result);
-        }
 
     }
 }

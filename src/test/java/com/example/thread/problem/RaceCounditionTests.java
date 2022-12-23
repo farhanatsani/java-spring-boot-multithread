@@ -7,23 +7,21 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class RaceCounditionTests {
-
     @Test
     void testRaceCondition() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
 
-        Counter counter = new Counter();
+        CounterRaceCondition counterRaceCondition = new CounterRaceCondition();
 
         for(int i = 0; i < 1000; i++) {
-            executorService.submit(() -> counter.increment());
+            executorService.submit(() -> counterRaceCondition.increment());
         }
 
         executorService.shutdown();
         executorService.awaitTermination(60, TimeUnit.SECONDS);
 
-        System.out.println("Final count is : " + counter.getCount());
+        System.out.println("Final count is : " + counterRaceCondition.getCount());
     }
-
     @Test
     void testSynchronization() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -39,7 +37,6 @@ public class RaceCounditionTests {
 
         System.out.println("Final count is : " + counter.getCount());
     }
-
     @Test
     void testAtomic() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(10);
@@ -55,5 +52,4 @@ public class RaceCounditionTests {
 
         System.out.println("Final count is : " + counter.getCount());
     }
-
 }
