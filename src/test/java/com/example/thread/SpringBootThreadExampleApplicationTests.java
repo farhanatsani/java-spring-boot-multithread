@@ -17,6 +17,11 @@ class SpringBootThreadExampleApplicationTests {
 	@Autowired
 	@Qualifier(value = "carReadCsvService")
 	private CarReadCsvService carReadCsvService;
+
+	@Autowired
+	@Qualifier(value = "carReadCsvUsingBufferService")
+	private CarReadCsvService carReadCsvUsingBufferService;
+
 	@Autowired
 	@Qualifier(value = "carEnrichmentService")
 	private CarEnrichmentService carEnrichmentService;
@@ -29,14 +34,14 @@ class SpringBootThreadExampleApplicationTests {
 	}
 	@Test
 	void testReadCsvUsingBuffer() {
-		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		for(CarVO carVO : carList) {
 			System.out.println(carVO.toString());
 		}
 	}
 	@Test
 	void testWebScrapping() {
-		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		for(CarVO carVO : carList) {
 			String carWikiSearchKeyword = carVO.getCarBrand() + "_" + carVO.getCarType();
 			String content = ScrappingUtils.readWikiContentPage(carWikiSearchKeyword);
@@ -46,7 +51,7 @@ class SpringBootThreadExampleApplicationTests {
 	}
 	@Test
 	void testEnrichDescription() {
-		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		carEnrichmentService.enrichCarDescription(carList);
 		for(int i = 0; i < 5; i++) {
 			System.out.println(carList.get(i).toString());
@@ -54,7 +59,7 @@ class SpringBootThreadExampleApplicationTests {
 	}
 	@Test
 	void testEnrichDescriptionUsingFuture() throws ExecutionException, InterruptedException {
-		List<CarVO> carList = carReadCsvService.readCsvCarUsingBuffer("car_result.csv");
+		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		carEnrichmentService.enrichCarDescriptionWithExecutor(carList);
 		for(int i = 0; i < 5; i++) {
 			System.out.println(carList.get(i).toString());
