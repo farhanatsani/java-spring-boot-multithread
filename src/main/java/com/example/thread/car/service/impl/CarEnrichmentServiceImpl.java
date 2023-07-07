@@ -5,6 +5,7 @@ import com.example.thread.car.service.CarEnrichmentService;
 import com.example.thread.car.util.ScrappingUtils;
 import com.example.thread.car.vo.CarVO;
 import lombok.SneakyThrows;
+import org.apache.poi.hpsf.Decimal;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,7 +57,9 @@ public class CarEnrichmentServiceImpl implements CarEnrichmentService {
     public List<CarVO> enrichCarDescriptionWithExecutor(List<CarVO> carList) {
         long start = System.currentTimeMillis();
 
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        int thread = Runtime.getRuntime().availableProcessors() * (1 + (2 / 5));
+
+        ExecutorService executor = Executors.newFixedThreadPool(thread);
 
         List<EnrichCarCallable> enrichCarCallables = new ArrayList<>();
         for(CarVO carVO : carList) {
@@ -71,6 +74,8 @@ public class CarEnrichmentServiceImpl implements CarEnrichmentService {
 
         float elapsed = (System.currentTimeMillis() - start) / 1000F;
         System.out.println("enrich elapsed time : " + elapsed + " seconds");
+        System.out.println("available processor : " + Runtime.getRuntime().availableProcessors());
+        System.out.println("number of thread : " + thread);
         return carVOResults;
     }
 }

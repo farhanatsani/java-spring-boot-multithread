@@ -64,4 +64,29 @@ public class CompletableFutureExampleTests {
 
     }
 
+    @Test
+    void testCompletedFuture() throws ExecutionException, InterruptedException {
+        System.out.println("start " +Thread.currentThread().getName());
+        long start = System.currentTimeMillis();
+        String hello = "HelloWorld";
+
+        CompletableFuture<String> completableFuture = CompletableFuture.completedFuture("")
+                .thenApplyAsync(s -> {
+                    try {
+                        System.out.println(Thread.currentThread().getName());
+                        Thread.sleep(6000);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return hello;
+                });
+
+        String value = completableFuture.get();
+
+        System.out.println(Thread.currentThread().getName());
+        System.out.println(value);
+        float elapsed = (System.currentTimeMillis() - start) / 1000F;
+        System.out.println("elapsed time : " + elapsed + " seconds");
+    }
+
 }

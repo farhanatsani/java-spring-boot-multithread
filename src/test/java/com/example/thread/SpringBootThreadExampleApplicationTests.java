@@ -53,16 +53,16 @@ class SpringBootThreadExampleApplicationTests {
 	void testEnrichDescription() {
 		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		carEnrichmentService.enrichCarDescription(carList);
-		for(int i = 0; i < 5; i++) {
-			System.out.println(carList.get(i).toString());
-		}
+//		for(int i = 0; i < carList.size(); i++) {
+//			System.out.println(carList.get(i).toString());
+//		}
 	}
 	@Test
-	void testEnrichDescriptionUsingFuture() throws ExecutionException, InterruptedException {
+	void testEnrichDescriptionUsingFuture() {
 		List<CarVO> carList = carReadCsvUsingBufferService.readCsvCar("car_result.csv");
 		carEnrichmentService.enrichCarDescriptionWithExecutor(carList);
-		for(int i = 0; i < 5; i++) {
-			System.out.println(carList.get(i).toString());
-		}
+//		for(int i = 0; i < carList.size(); i++) {
+//			System.out.println(carList.get(i).toString());
+//		}
 	}
 }
